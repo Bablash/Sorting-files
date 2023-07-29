@@ -8,12 +8,15 @@ public class MergeSort {
 
     private Writer writer;
 
+    private Comparator comparator;
+
     private String type;
 
     MergeSort(){
         mode = true;
         readers = new ArrayList<>();
         type = "int";
+        comparator = new Comparator();
     }
 
     public void setMode(boolean f){
@@ -45,9 +48,9 @@ public class MergeSort {
 
         List<String> array = new ArrayList<>();
 
-        for (int i = 0; i < readers.size(); i++) {
+        for (int i = 0; i < readers.size(); i++) { //считываем первые элементы из каждого файла
             String item = readers.get(i).getItem();
-            if (item != null)
+            if (item != null && readers.get(i) != null)
                 array.add(readers.get(i).getItem());
             else {
                 readers.remove(i);
@@ -60,12 +63,12 @@ public class MergeSort {
             int indexOfEx = array.indexOf(ex);
 
             try {
-                writer.write(ex + "\n");
+                writer.write(ex + "\n"); //записываем в файл макс/мин элемент из массива
                 writer.flush();
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
-            getNextItem(indexOfEx, ex, array);
+            getNextItem(indexOfEx, ex, array); //метод заменяет в массиве макс/мин элемент на следующее значение из файла, где был найден макс/мин
         }
 
         try {
@@ -81,7 +84,7 @@ public class MergeSort {
         if (value != null){
             if (!check_sort(ex, value))
                 getNextItem(indexOfEx, ex, array);
-            else array.set(indexOfEx, (value)); //если все хорошо, то на индекс элемента, который являлся мин/макс, ставим следующий из этого же файла
+            else array.set(indexOfEx, (value)); //если все хорошо, то на место элемента, который являлся мин/макс, ставим следующий из этого же файла
         }
         else {
             array.remove(indexOfEx);
@@ -91,48 +94,16 @@ public class MergeSort {
     }
 
     public boolean check_sort(String item, String nextItem){ //проверяем верно ли отсортирован файл
-        if (mode) {
-            if (type.equals("int")) {
-                return Integer.parseInt(nextItem) >= Integer.parseInt(item);
-            } else {
-                return nextItem.compareTo(item) >= 0;
-            }
-        } else {
-            if (type.equals("int"))
-                return Integer.parseInt(nextItem) <= Integer.parseInt(item);
-            else
-                return nextItem.compareTo(item) <= 0;
-        }
+        if (mode)
+            return comparator.a_sort(type, item, nextItem);
+        else
+            return comparator.d_sort(type, item, nextItem);
     }
     public String extreme(List<String> array){ //в зависимости от режима сортировки ищем макс/мин
         if(mode)
-            return min(array);
+            return comparator.min(array, type);
         else
-            return max(array);
-    }
-    public String min(List<String> arr){
-        String min;
-        List<Integer> array_int = new ArrayList<>();
-        if (type.equals("int")){
-            for (String s : arr)
-                array_int.add(Integer.parseInt(s));
-            min = Integer.toString(Collections.min(array_int));
-        }
-        else
-            min = Collections.min(arr);
-        return min;
+            return comparator.max(array, type);
     }
 
-    public String max(List<String> arr){
-        String max;
-        List<Integer> array_int = new ArrayList<>();
-        if (type.equals("int")){
-            for (String s : arr)
-                array_int.add(Integer.parseInt(s));
-            max = Integer.toString(Collections.max(array_int));
-        }
-        else
-            max = Collections.max(arr);
-        return max;
-    }
 }
