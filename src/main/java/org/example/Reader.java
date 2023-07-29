@@ -35,9 +35,10 @@ public class Reader {
 
             if (type.equals("int") && value!= null) { //если сортируем int и считали не int с файла
                 isInt = isInt(value);
+                if(!isInt)
+                    getNextItem(type);
             }
-
-            if(value != null && (value.contains(" ") || !isInt))
+            else if(value != null && (value.contains(" ")))
                 getNextItem(type);
 
         } catch (IOException e) {
