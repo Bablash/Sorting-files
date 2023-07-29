@@ -14,15 +14,16 @@ public class Main {
                         myMergeSort.setMode(false);
                     i++;
                 }
-                if (args[i].equals("-i")) {
+                if (args[i].equals("-i") || args[i].equals("-s")) {
+                    if (args[i].equals("-s"))
+                        myMergeSort.setType("string");
                     break;
                 }
-                if (args[i].equals("-s")){
-                    myMergeSort.setType("string");
-                    break;
+                else {
+                    System.out.println("Invalid arguments of command line.");
+                    return;
                 }
             }
-
             int indexOfReader;
             if(sort_mode) {
                 myMergeSort.setWriter(args[2]);
@@ -43,6 +44,6 @@ public class Main {
             myMergeSort.sort();
         }
         else
-            System.out.println("Invalid arguments of command line arguments.");
+            System.out.println("Invalid arguments of command line.");
     }
 }

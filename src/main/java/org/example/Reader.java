@@ -54,4 +54,12 @@ public class Reader {
             return false;
         }
     }
+
+    public void close(){
+        try {
+            reader.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
